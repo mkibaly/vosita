@@ -1,12 +1,9 @@
-﻿using AutoMapper.Internal.Mappers;
-using NetTopologySuite.Geometries;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.Application.Dtos;
 
 namespace vosita_backend_task.Locations
 {
@@ -37,9 +34,9 @@ namespace vosita_backend_task.Locations
             return dto;
         }
 
-        public async Task<UserLocationDto> GetAsync(Guid Id, CancellationToken cancellationToken)
+        public async Task<UserLocationDto> GetAsync(Guid id, CancellationToken cancellationToken)
         {
-            var location = await _userLocationRepository.FindAsync(Id, true, cancellationToken);
+            var location = await _userLocationRepository.FindAsync(id, true, cancellationToken);
 
             if (location == null)
             {
@@ -48,6 +45,20 @@ namespace vosita_backend_task.Locations
 
             var dto = ObjectMapper.Map<UserLocation, UserLocationDto>(location);
             return dto;
+        }
+
+        public async Task<PagedResultDto<UserLocationDto>> GetListAsync(UserLocationFilterDto filter, CancellationToken cancellationToken)
+        {
+            var list = await _userLocationRepository.GetListAsync(filter.LocationName, filter.LocationType, filter.City, filter.ZipCode, filter.SkipCount, filter.MaxResultCount, cancellationToken);
+            var count = await _userLocationRepository.GetListCountAsync(filter.LocationName, filter.LocationType, filter.City, filter.ZipCode, cancellationToken);
+
+            var result = new PagedResultDto<UserLocationDto>()
+            {
+                Items = ObjectMapper.Map<List<UserLocation>, List<UserLocationDto>>(list),
+                TotalCount = count
+            };
+
+            return result;
         }
 
     }

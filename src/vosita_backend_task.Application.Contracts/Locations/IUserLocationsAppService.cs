@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Threading;
+using Volo.Abp.Application.Dtos;
 
 namespace vosita_backend_task.Locations
 {
@@ -10,6 +9,7 @@ namespace vosita_backend_task.Locations
     {
         Task<UserLocationDto> CreateAsync(UserLocationCreateDto location, CancellationToken cancellationToken);
         Task<UserLocationDto> GetAsync(Guid Id, CancellationToken cancellationToken);
+        Task<PagedResultDto<UserLocationDto>> GetListAsync(UserLocationFilterDto filter, CancellationToken cancellationToken);
     }
 
 }
