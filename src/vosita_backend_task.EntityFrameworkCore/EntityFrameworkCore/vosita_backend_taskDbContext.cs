@@ -87,7 +87,7 @@ public class vosita_backend_taskDbContext :
             b.Property(a => a.LocationName).IsRequired();
             b.Property(a => a.LocationType).IsRequired();
 
-            b.Property(a => a.LocationCoordinates).IsRequired();
+            b.Property(a => a.LocationCoordinates).IsRequired().HasColumnType("geometry");
             b.Property(a => a.MainAddress).IsRequired();
 
             b.Property(a => a.StateId).IsRequired();

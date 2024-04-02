@@ -1,11 +1,6 @@
 ﻿using NetTopologySuite.Geometries;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Volo.Abp.Domain.Entities;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace vosita_backend_task.Locations
@@ -15,7 +10,6 @@ namespace vosita_backend_task.Locations
         public string LocationName { get; private set; }
         public LocationTypeEnum LocationType { get; private set; }
         public string? Description { get; private set; }
-        [Column(TypeName = "geometry")]
         public Point LocationCoordinates { get; private set; }
         public string MainAddress { get; private set; }
         public string? SecondAddress { get; private set; }
@@ -40,6 +34,53 @@ namespace vosita_backend_task.Locations
             string zipCode,
             string mainPhoneNumber)
         {
+
+            #region validation  
+
+            // Validate required parameters
+            if (string.IsNullOrEmpty(locationName))
+            {
+                throw new UserFriendlyException("Location name is required.");
+            }
+
+            // Validate the LocationTypeEnum
+            if (!Enum.IsDefined(typeof(LocationTypeEnum), locationType))
+            {
+                throw new UserFriendlyException("Invalid location type.");
+            }
+
+            if (locationCoordinates == null || locationCoordinates.IsEmpty)
+            {
+                throw new UserFriendlyException("Location coordinates are required.");
+            }
+
+            if (string.IsNullOrEmpty(mainAddress))
+            {
+                throw new UserFriendlyException("Main address is required.");
+            }
+
+            if (stateId == Guid.Empty)
+            {
+                throw new UserFriendlyException("State ID is required.");
+            }
+
+            if (string.IsNullOrEmpty(city))
+            {
+                throw new UserFriendlyException("City is required.");
+            }
+
+            if (string.IsNullOrEmpty(zipCode))
+            {
+                throw new UserFriendlyException("Zip code is required.");
+            }
+
+            if (string.IsNullOrEmpty(mainPhoneNumber))
+            {
+                throw new UserFriendlyException("Main phone number is required.");
+            }
+
+            #endregion
+
             LocationName = locationName;
             LocationType = locationType;
             Description = description;
@@ -52,5 +93,4 @@ namespace vosita_backend_task.Locations
             MainPhoneNumber = mainPhoneNumber;
         }
     }
-
 }

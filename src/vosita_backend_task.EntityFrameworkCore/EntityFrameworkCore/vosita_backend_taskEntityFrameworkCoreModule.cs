@@ -12,6 +12,7 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace vosita_backend_task.EntityFrameworkCore;
 
@@ -38,16 +39,16 @@ public class vosita_backend_taskEntityFrameworkCoreModule : AbpModule
     {
         context.Services.AddAbpDbContext<vosita_backend_taskDbContext>(options =>
         {
-                /* Remove "includeAllEntities: true" to create
-                 * default repositories only for aggregate roots */
+            /* Remove "includeAllEntities: true" to create
+             * default repositories only for aggregate roots */
             options.AddDefaultRepositories(includeAllEntities: true);
         });
 
         Configure<AbpDbContextOptions>(options =>
         {
-                /* The main point to change your DBMS.
-                 * See also vosita_backend_taskMigrationsDbContextFactory for EF Core tooling. */
-            options.UseSqlServer();
+            /* The main point to change your DBMS.
+             * See also vosita_backend_taskMigrationsDbContextFactory for EF Core tooling. */
+            options.UseSqlServer(a => a.UseNetTopologySuite());
         });
 
     }
