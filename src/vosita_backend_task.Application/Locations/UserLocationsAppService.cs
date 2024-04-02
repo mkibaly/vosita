@@ -16,8 +16,13 @@ namespace vosita_backend_task.Locations
             _userLocationRepository = userLocationRepository;
         }
 
-        public async Task<UserLocationDto> CreateAsync(UserLocationCreateDto location, CancellationToken cancellationToken)
+        public async Task<UserLocationDto> CreateAsync(Guid? Id, UserLocationCreateDto location, CancellationToken cancellationToken)
         {
+            if (Id != null && Id != Guid.Empty)
+            {
+                return await UpdateAsync(Id.Value, location, cancellationToken);
+            }
+
             var userLocation = new UserLocation(location.LocationName,
                 location.LocationType,
                 location.Description,
@@ -31,6 +36,32 @@ namespace vosita_backend_task.Locations
 
             var insertedLocation = await _userLocationRepository.InsertAsync(userLocation, false, cancellationToken);
             var dto = ObjectMapper.Map<UserLocation, UserLocationDto>(insertedLocation);
+            return dto;
+        }
+
+        private async Task<UserLocationDto> UpdateAsync(Guid id, UserLocationCreateDto location, CancellationToken cancellationToken)
+        {
+            var currentLocation = await _userLocationRepository.GetAsync(id, true, cancellationToken);
+            if (currentLocation == null)
+            {
+                // we already checked if id is not null or empty, so we should get data otherwise this is error.
+                throw new UserFriendlyException("Can't find UserLocation with id " + id);
+            }
+
+            currentLocation.Update(
+                location.LocationName,
+                location.LocationType,
+                location.Description,
+                location.LocationCoordinates.GetPoint(),
+                location.MainAddress,
+                location.SecondAddress,
+                location.StateId,
+                location.City,
+                location.ZipCode,
+                location.MainPhoneNumber);
+
+            var result = await _userLocationRepository.UpdateAsync(currentLocation, false, cancellationToken);
+            var dto = ObjectMapper.Map<UserLocation, UserLocationDto>(result);
             return dto;
         }
 

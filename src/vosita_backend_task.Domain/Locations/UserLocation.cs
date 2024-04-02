@@ -1,5 +1,7 @@
 ﻿using NetTopologySuite.Geometries;
 using System;
+using System.Net.Mail;
+using System.Reflection.Emit;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -35,7 +37,32 @@ namespace vosita_backend_task.Locations
             string mainPhoneNumber)
         {
 
-            #region validation  
+            Validate(locationName, locationType, description, locationCoordinates, mainAddress, secondAddress, stateId, city, zipCode, mainPhoneNumber);
+
+            LocationName = locationName;
+            LocationType = locationType;
+            Description = description;
+            LocationCoordinates = locationCoordinates;
+            MainAddress = mainAddress;
+            SecondAddress = secondAddress;
+            StateId = stateId;
+            City = city;
+            ZipCode = zipCode;
+            MainPhoneNumber = mainPhoneNumber;
+        }
+
+        #region validation  
+        private void Validate(string locationName,
+            LocationTypeEnum locationType,
+            string? description,
+            Point locationCoordinates,
+            string mainAddress,
+            string? secondAddress,
+            Guid stateId,
+            string city,
+            string zipCode,
+            string mainPhoneNumber)
+        {
 
             // Validate required parameters
             if (string.IsNullOrEmpty(locationName))
@@ -79,7 +106,21 @@ namespace vosita_backend_task.Locations
                 throw new UserFriendlyException("Main phone number is required.");
             }
 
-            #endregion
+        }
+        #endregion
+
+        public void Update(string locationName,
+            LocationTypeEnum locationType,
+            string? description,
+            Point locationCoordinates,
+            string mainAddress,
+            string? secondAddress,
+            Guid stateId,
+            string city,
+            string zipCode,
+            string mainPhoneNumber)
+        {
+            Validate(locationName, locationType, description, locationCoordinates, mainAddress, secondAddress, stateId, city, zipCode, mainPhoneNumber);
 
             LocationName = locationName;
             LocationType = locationType;
