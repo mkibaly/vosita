@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Volo.Abp.EntityFrameworkCore;
@@ -13,9 +14,11 @@ using vosita_backend_task.EntityFrameworkCore;
 namespace vosita_backend_task.Migrations
 {
     [DbContext(typeof(vosita_backend_taskDbContext))]
-    partial class vosita_backend_taskDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240402011057_createUserLocation")]
+    partial class createUserLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

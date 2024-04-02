@@ -4,6 +4,7 @@ using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using vosita_backend_task.Locations;
 
 namespace vosita_backend_task.EntityFrameworkCore;
 
@@ -24,6 +26,7 @@ public class vosita_backend_taskDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<UserLocation> UserLocations { get; set; }
 
     #region Entities from the modules
 
@@ -76,11 +79,21 @@ public class vosita_backend_taskDbContext :
 
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(vosita_backend_taskConsts.DbTablePrefix + "YourEntities", vosita_backend_taskConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+        builder.Entity<UserLocation>(b =>
+        {
+            b.ToTable(vosita_backend_taskConsts.DbTablePrefix + "UserLocations");
+            b.ConfigureByConvention();
+
+            b.Property(a => a.LocationName).IsRequired();
+            b.Property(a => a.LocationType).IsRequired();
+
+            b.Property(a => a.LocationCoordinates).IsRequired();
+            b.Property(a => a.MainAddress).IsRequired();
+
+            b.Property(a => a.StateId).IsRequired();
+            b.Property(a => a.City).IsRequired();
+            b.Property(a => a.ZipCode).IsRequired();
+            b.Property(a => a.MainPhoneNumber).IsRequired();
+        });
     }
 }

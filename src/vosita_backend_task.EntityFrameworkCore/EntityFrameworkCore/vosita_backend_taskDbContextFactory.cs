@@ -17,7 +17,7 @@ public class vosita_backend_taskDbContextFactory : IDesignTimeDbContextFactory<v
         var configuration = BuildConfiguration();
 
         var builder = new DbContextOptionsBuilder<vosita_backend_taskDbContext>()
-            .UseSqlServer(configuration.GetConnectionString("Default"));
+            .UseSqlServer(configuration.GetConnectionString("Default"), x=> x.UseNetTopologySuite());
 
         return new vosita_backend_taskDbContext(builder.Options);
     }
